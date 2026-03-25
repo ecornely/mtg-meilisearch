@@ -1,0 +1,4 @@
+translations.json
+mtgjson/*.json
+meili_data/
+.env
