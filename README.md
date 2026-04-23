@@ -1,13 +1,14 @@
 # Base de donnée de traduction en/fr pour MTG
 
 ## Donnée du jeux MTG Arena
+Trouver le fichier de traduction avec `find /home/corne/.steam/steam/steamapps -name "*CardDatabase*.mtga"`
 Utiliser le script extract_card_translation.py pour transformer le SQLite des traductions du jeux en un json
 
 ## Donnée MTGjson
 Dans le dossier mtgjson télécharger AllPrintings sur le site de mtgjson et utiliser le script translate_all.sh pour avoir un json
 
 ## Fusion de plusieurs json
-jq -c -s 'add | group_by(.en) | map(add)' mtgjson/translations.json ~/tmp/transation.json > translations.json
+jq -c -s 'add | group_by(.en) | map(add)' mtgjson/translations.json mtga/translations.json > translations.json
 
 # Mise en place du docker
 
@@ -67,7 +68,7 @@ curl \
 
 Suivi de la tache d'indexation avec :
 ```shell
-curl 'http://localhost:7700/tasks/1' -H "Authorization: Bearer $BEARER$"
+curl 'http://localhost:7700/tasks/1' -H "Authorization: Bearer $BEARER"
 ```
 
 ## Utiliser la recherche
@@ -75,7 +76,7 @@ curl 'http://localhost:7700/tasks/1' -H "Authorization: Bearer $BEARER$"
 Pour utiliser la recherche, on peut le faire avec un bearer read-only plutôt que de prendre celui d'admin qui est dans le .env. Pour obtenir ce bearer, il faut interroger:
 
 ```shell
-curl -s 'http://localhost:7700/keys' -H 'Authorization: Bearer <bearer>' \
+curl -s 'http://localhost:7700/keys' -H "Authorization: Bearer $BEARER" \
   | jq -C '.results[] | select (.actions[]|contains("search")) | select((.name | test("Chat API"))!=true)'
 ```
 

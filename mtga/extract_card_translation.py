@@ -1,6 +1,11 @@
+#!/bin/env python3
+
+import os
 import re
 import sqlite3
 import json
+
+from pathlib import Path
 
 def generate_pk(text):
     if not text:
@@ -36,7 +41,28 @@ ORDER BY c.TitleId;
         f.write('\n]\n')
 
     conn.close()
+
+
+def find_mtga_card_database():
+    base_path = Path.home() / ".steam/steam/steamapps"
     
+    if not base_path.exists():
+        raise FileNotFoundError(f"Le dossier Steam est introuvable : {base_path}")
+
+    try:
+        return next(base_path.rglob("*CardDatabase*.mtga"))
+    except StopIteration:
+        raise FileNotFoundError("Raw_CardDatabase .mtga file not found in Player.log.")
+
+
+def copy_card_database(src_path, dest_path):
+    import shutil
+    shutil.copy(src_path, dest_path)
+
+def get_script_path():
+    import os
+    return os.path.dirname(os.path.realpath(__file__))
 
 if __name__ == "__main__":
-    extract_card_translations('/home/corne/tmp/Raw_CardDatabase_7cca6803f9ecd5ad3578065ba0f6487a.mtga', '/home/corne/tmp/transation.json')
+    #copy_card_database(find_mtga_card_database(), 'card_database.db')
+    extract_card_translations('card_database.db', os.path.join(get_script_path(), 'translations.json'))

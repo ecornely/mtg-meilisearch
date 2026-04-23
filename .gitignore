@@ -1,4 +1,5 @@
 translations.json
 mtgjson/*.json
+mtga/card_database.db
 meili_data/
 .env
