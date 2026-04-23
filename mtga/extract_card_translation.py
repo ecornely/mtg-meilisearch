@@ -1,11 +1,12 @@
 #!/bin/env python3
 
-import os
 import re
 import sqlite3
 import json
 
 from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
 
 def generate_pk(text):
     if not text:
@@ -59,10 +60,7 @@ def copy_card_database(src_path, dest_path):
     import shutil
     shutil.copy(src_path, dest_path)
 
-def get_script_path():
-    import os
-    return os.path.dirname(os.path.realpath(__file__))
-
 if __name__ == "__main__":
-    #copy_card_database(find_mtga_card_database(), 'card_database.db')
-    extract_card_translations('card_database.db', os.path.join(get_script_path(), 'translations.json'))
+    database_path=SCRIPT_DIR / 'card_database.db'
+    copy_card_database(find_mtga_card_database(), database_path)
+    extract_card_translations(database_path, SCRIPT_DIR / 'translations.json')

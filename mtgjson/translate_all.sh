@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-FILE="AllPrintings.json"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FILE="$SCRIPT_DIR/AllPrintings.json"
+OUTPUT="$SCRIPT_DIR/translations.json"
 
 if [[ ! -f "$FILE" ]]; then
-    echo "Erreur : $FILE introuvable." >&2
+    echo "Erreur : $FILE introuvable dans $SCRIPT_DIR" >&2
     exit 1
 fi
 
@@ -22,4 +24,4 @@ cat "$FILE" | jq -r -c '
         "fr": (.foreignData[] | select(.language == "French") | .name) 
       }
   ] | unique_by(.en) | sort_by(.en)
-' > translations.json
+' > "$OUTPUT"
